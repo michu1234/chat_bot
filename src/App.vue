@@ -6,10 +6,11 @@
           <ul>
             <li v-for="(chatData, index) in chatInfo" :key="index">{{chatData.text}}</li>
           </ul>
-          <input type="text" v-model="chatAnswears" ref="input" placeholder="Type here..." id="nameField">
+<input type="text" v-model="chatAnswears" ref="input" placeholder="Type here..." id="nameField">
           <div class="float-right">
           </div>
-          <input class="button-primary" ref="submit" @click.prevent="whatUserSaid(chatAnswears)" type="submit" value="Send">
+ <input class="button-primary" ref="submit" @click.prevent="whatUserSaid(chatAnswears)" type="submit"
+              value="Send">
         </fieldset>
       </form>
 
@@ -19,6 +20,9 @@
 </template>
 
 <script>
+  import {
+    TimelineLite
+  } from 'gsap'
   export default {
     data() {
       return {
@@ -54,6 +58,25 @@
     },
     methods: {
       whatUserSaid(data) {
+
+        const {submit, inputborder} = this.$refs;
+        const timeline = new TimelineLite();
+
+ timeline.to(submit, 0.4, {
+      scale: 0.8,
+      rotation: 16,
+      ease: Back.easeOut.config(1.7),
+    })   
+    timeline.to(
+      submit,
+      0.5, 
+      {
+        scale: 0.9,
+        opacity: 1,
+      },
+     '-=0.6' 
+    )
+
 
 
         this.chatInfo.push({
@@ -160,6 +183,7 @@
     animation: animateEven 1s ease;
   }
 
+
   @keyframes animate {
     from {
       opacity: 0;
@@ -200,4 +224,6 @@
     left: 0;
     z-index: 1;
   }
+
+
 </style>
