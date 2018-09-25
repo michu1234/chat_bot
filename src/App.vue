@@ -6,10 +6,10 @@
           <ul>
             <li v-for="(chatData, index) in chatInfo" :key="index">{{chatData.text}}</li>
           </ul>
-          <input type="text" v-model="chatAnswears" placeholder="Type here..." id="nameField">
+          <input type="text" v-model="chatAnswears" ref="input" placeholder="Type here..." id="nameField">
           <div class="float-right">
           </div>
-          <input class="button-primary" @click.prevent="whatUserSaid(chatAnswears)" type="submit" value="Send">
+          <input class="button-primary" ref="submit" @click.prevent="whatUserSaid(chatAnswears)" type="submit" value="Send">
         </fieldset>
       </form>
 
@@ -27,14 +27,15 @@
           text: "What is your name my friend?"
         }],
         chatAnswears: [],
+        questionsNumber: '',
         chatQuestions: [{
             text: "What is your name my friend?"
           },
           {
-            text: " that is beautiful. Where are you come from?"
+            text: " that is beautiful. Where are you come from"
           },
           {
-            text: "How young you are?"
+            text: "! 😲 What a amazing place to live! How young you are?"
           },
           {
             text: "What is your e-mail adress?"
@@ -48,41 +49,77 @@
     mounted() {
       responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
     },
+    created() {
+     this.questionsNumber = this.chatQuestions.length;
+    },
     methods: {
       whatUserSaid(data) {
 
+       
         this.chatInfo.push({
           text: this.chatAnswears
         })
 
         switch (this.counter) {
           case 0:
-            this.chatQuestions.shift(this.chatQuestions[0]);
             responsiveVoice.speak(this.chatAnswears);
+            this.chatQuestions.shift(this.chatQuestions[0]);
             setTimeout(() => {
               this.chatInfo.push({
-                text: `${this.chatAnswears}... ${this.chatQuestions[0].text}`
+                text: `${this.chatAnswears}... ${this.chatQuestions[0].text} ${this.chatAnswears}?`
               });
+              responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}${this.chatAnswears}?`, "UK English Male");this.chatAnswears = '';
+              this.counter++;
+              console.log(this.counter)
 
-              responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
+            }, 2000)
+            break;
+
+            case 1:
+            responsiveVoice.speak(this.chatAnswears);
+            this.chatQuestions.shift(this.chatQuestions[0]);
+            setTimeout(() => {
+              this.chatInfo.push({
+                text: `${this.chatAnswears}${this.chatQuestions[0].text}`
+              });
+              responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}`, "UK English Male");
               this.chatAnswears = '';
-
-              this.counter++
+              this.counter++;
+              console.log(this.counter)
 
             }, 2000)
 
             break;
+            case 4:
+            responsiveVoice.speak(this.chatAnswears);
+            this.chatQuestions.shift(this.chatQuestions[0]);
+            setTimeout(() => {
+              this.chatInfo.push({
+                text: "Thank you!"
+              });
+                          }, 2000)
+            this.counter++
+            this.chatAnswears = '';
+            break;
+            case 5:
+            this.$refs.input.disabled = true;
+            this.$refs.submit.disabled = true;
+            this.chatAnswears = '';
+            this.$refs.input.placeholder = "See you soon! 😉 👋👋";
 
           default:
-            this.chatQuestions.shift(this.chatQuestions[0]);
             responsiveVoice.speak(this.chatAnswears);
-              this.chatInfo.push(this.chatQuestions[0].text);
-
-
-
-
-            responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
             this.chatAnswears = '';
+            this.chatQuestions.shift(this.chatQuestions[0]);
+            setTimeout(() => {
+              this.chatInfo.push({
+                text: this.chatQuestions[0].text
+              });
+                          }, 2000)
+            this.counter++
+            responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
+
+            console.log(this.counter, this.questionsNumber);
             break;
         }
 
