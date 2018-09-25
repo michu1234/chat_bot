@@ -50,12 +50,12 @@
       responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
     },
     created() {
-     this.questionsNumber = this.chatQuestions.length;
+      this.questionsNumber = this.chatQuestions.length;
     },
     methods: {
       whatUserSaid(data) {
 
-       
+
         this.chatInfo.push({
           text: this.chatAnswears
         })
@@ -68,14 +68,16 @@
               this.chatInfo.push({
                 text: `${this.chatAnswears}... ${this.chatQuestions[0].text} ${this.chatAnswears}?`
               });
-              responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}${this.chatAnswears}?`, "UK English Male");this.chatAnswears = '';
+              responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}${this.chatAnswears}?`,
+                "UK English Male");
+              this.chatAnswears = '';
               this.counter++;
               console.log(this.counter)
 
             }, 2000)
             break;
 
-            case 1:
+          case 1:
             responsiveVoice.speak(this.chatAnswears);
             this.chatQuestions.shift(this.chatQuestions[0]);
             setTimeout(() => {
@@ -90,23 +92,23 @@
             }, 2000)
 
             break;
-            case 4:
+          case 4:
             responsiveVoice.speak(this.chatAnswears);
             this.chatQuestions.shift(this.chatQuestions[0]);
             setTimeout(() => {
               this.chatInfo.push({
                 text: "Thank you!"
               });
-                          }, 2000)
+            }, 2000)
             this.counter++
             this.chatAnswears = '';
             break;
-            case 5:
+          case 5:
             this.$refs.input.disabled = true;
             this.$refs.submit.disabled = true;
             this.chatAnswears = '';
             this.$refs.input.placeholder = "See you soon! 😉 👋👋";
-
+            break;
           default:
             responsiveVoice.speak(this.chatAnswears);
             this.chatAnswears = '';
@@ -115,7 +117,7 @@
               this.chatInfo.push({
                 text: this.chatQuestions[0].text
               });
-                          }, 2000)
+            }, 2000)
             this.counter++
             responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
 
@@ -182,5 +184,20 @@
       opacity: 1;
       transform: translate(100px, 0);
     }
+  }
+
+  .app_fadingBox {
+    width: 100%;
+    height: 150px;
+    background: white;
+    box-shadow: 0 0 90px white,
+      0 0 90px white,
+      0 0 90px white,
+      0 0 90px white;
+    opacity: .6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
   }
 </style>
