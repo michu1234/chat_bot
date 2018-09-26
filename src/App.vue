@@ -1,16 +1,16 @@
 <template>
   <div id="app">
+    <img class="app__bot" :src="src" />
     <div class="app__chat row">
       <form>
         <fieldset>
           <ul>
             <li v-for="(chatData, index) in chatInfo" :key="index">{{chatData.text}}</li>
           </ul>
-<input type="text" v-model="chatAnswears" ref="input" placeholder="Type here..." id="nameField">
+          <input type="text" v-model="chatAnswears" ref="input" placeholder="Type here..." id="nameField">
           <div class="float-right">
           </div>
- <input class="button-primary" ref="submit" @click.prevent="whatUserSaid(chatAnswears)" type="submit"
-              value="Send">
+          <input class="button-primary" ref="submit" @click.prevent="whatUserSaid(chatAnswears)" type="submit" value="Send">
         </fieldset>
       </form>
 
@@ -26,6 +26,7 @@
   export default {
     data() {
       return {
+        src: './static/mowi.gif',
         counter: 0,
         chatInfo: [{
           text: "What is your name my friend?"
@@ -51,78 +52,99 @@
       }
     },
     mounted() {
-      responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
+      this.botSpeaks();
     },
     created() {
       this.questionsNumber = this.chatQuestions.length;
     },
     methods: {
-      whatUserSaid(data) {
-
-        const {submit, inputborder} = this.$refs;
-        const timeline = new TimelineLite();
-
- timeline.to(submit, 0.4, {
-      scale: 0.8,
-      rotation: 16,
-      ease: Back.easeOut.config(1.7),
-    })   
-    timeline.to(
-      submit,
-      0.5, 
-      {
-        scale: 0.9,
-        opacity: 1,
+      botSpeaks() {
+        this.src = '/img/mowi.394f1d09.gif';
+        responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
+        setTimeout(() => {
+          this.src = '/img/milczy.d51d6997.gif';
+        }, 3000)
       },
-     '-=0.6' 
-    )
-
-
-
+      userSpeaks() {
+        responsiveVoice.speak(this.chatAnswears);
+      },
+      nextQuesition() {
+        this.chatQuestions.shift(this.chatQuestions[0]);
+        setTimeout(() => {
+          this.chatInfo.push({
+            text: this.chatQuestions[0].text
+          });
+        }, 2000);
+      },
+      whatUserSaid(data) {
+        const {
+          submit,
+          inputborder
+        } = this.$refs;
+        const timeline = new TimelineLite();
         this.chatInfo.push({
           text: this.chatAnswears
         })
 
         switch (this.counter) {
           case 0:
-            responsiveVoice.speak(this.chatAnswears);
+            this.userSpeaks();
+
+
+
             this.chatQuestions.shift(this.chatQuestions[0]);
             setTimeout(() => {
               this.chatInfo.push({
                 text: `${this.chatAnswears}... ${this.chatQuestions[0].text} ${this.chatAnswears}?`
               });
+              this.src = '/img/mowi.394f1d09.gif';
               responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}${this.chatAnswears}?`,
                 "UK English Male");
+              setTimeout(() => {
+                this.src = '/img/milczy.d51d6997.gif';
+              }, 4000)
               this.chatAnswears = '';
               this.counter++;
-              console.log(this.counter)
-
             }, 2000)
+
+
+
             break;
 
           case 1:
-            responsiveVoice.speak(this.chatAnswears);
+            this.userSpeaks();
+
+
+
             this.chatQuestions.shift(this.chatQuestions[0]);
             setTimeout(() => {
               this.chatInfo.push({
                 text: `${this.chatAnswears}${this.chatQuestions[0].text}`
               });
+              this.src = '/img/mowi.394f1d09.gif';
               responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}`, "UK English Male");
+              setTimeout(() => {
+                this.src = '/img/milczy.d51d6997.gif';
+              }, 4500)
               this.chatAnswears = '';
               this.counter++;
-              console.log(this.counter)
-
             }, 2000)
+
+
+
 
             break;
           case 4:
-            responsiveVoice.speak(this.chatAnswears);
+            this.userSpeaks();
             this.chatQuestions.shift(this.chatQuestions[0]);
             setTimeout(() => {
               this.chatInfo.push({
                 text: "Thank you!"
               });
             }, 2000)
+
+
+
             this.counter++
             this.chatAnswears = '';
             break;
@@ -133,27 +155,13 @@
             this.$refs.input.placeholder = "See you soon! 😉 👋👋";
             break;
           default:
-            responsiveVoice.speak(this.chatAnswears);
+            this.userSpeaks();
             this.chatAnswears = '';
-            this.chatQuestions.shift(this.chatQuestions[0]);
-            setTimeout(() => {
-              this.chatInfo.push({
-                text: this.chatQuestions[0].text
-              });
-            }, 2000)
+            this.nextQuesition();
+            this.botSpeaks();
             this.counter++
-            responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
-
-            console.log(this.counter, this.questionsNumber);
             break;
         }
-
-
-
-
-
-
-
       }
     }
   }
@@ -169,7 +177,7 @@
   ul li {
     list-style: none;
     font-weight: bold;
-    list-style-image: url('https://i0.wp.com/samsungprinter.app/wp-content/uploads/2018/05/icon-app.png?fit=25%2C25&ssl=1');
+    list-style-image: url('https://image.ibb.co/grBPU9/D_ejson_Html.jpg');
     border-bottom: 1px dashed lightgray;
     animation: animate 1s ease;
     transition: all 1s;
@@ -225,5 +233,10 @@
     z-index: 1;
   }
 
-
+  .app__bot {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    transform: translateX(200px);
+  }
 </style>
