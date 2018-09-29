@@ -10,7 +10,7 @@
           <input type="text" v-model="chatAnswears" ref="input" placeholder="Type here..." id="nameField">
           <div class="float-right">
           </div>
-          <input class="button-primary" ref="submit" @click.prevent="whatUserSaid(chatAnswears)" type="submit" value="Send">
+          <input class="button-primary" ref="submit" @click.prevent="chat(chatAnswears)" type="submit" value="Send">
         </fieldset>
       </form>
 
@@ -20,13 +20,10 @@
 </template>
 
 <script>
-  import {
-    TimelineLite
-  } from 'gsap'
   export default {
     data() {
       return {
-        src: './static/mowi.gif',
+        src: '',
         counter: 0,
         chatInfo: [{
           text: "What is your name my friend?"
@@ -52,15 +49,18 @@
       }
     },
     mounted() {
-      this.botSpeaks();
+      let botSpeech = this.chatQuestions[0].text;
+      this.botSpeaks(botSpeech);
+      this.counter++;
     },
     created() {
       this.questionsNumber = this.chatQuestions.length;
     },
     methods: {
-      botSpeaks() {
-        this.src = '/img/mowi.394f1d09.gif';
-        responsiveVoice.speak(this.chatQuestions[0].text, "UK English Male");
+      botSpeaks(data) {
+        this.src = '/img/milczy.d51d6997.gif';
+        setTimeout(() => this.src = '/img/mowi.394f1d09.gif', 500)
+        responsiveVoice.speak(data, "UK English Male");
         setTimeout(() => {
           this.src = '/img/milczy.d51d6997.gif';
         }, 3000)
@@ -68,101 +68,68 @@
       userSpeaks() {
         responsiveVoice.speak(this.chatAnswears);
       },
-      nextQuesition() {
+      nextQuesition(data, callback, callback2, callback3) {
         this.chatQuestions.shift(this.chatQuestions[0]);
         setTimeout(() => {
           this.chatInfo.push({
-            text: this.chatQuestions[0].text
+            text: data
           });
+          callback();
         }, 2000);
       },
-      whatUserSaid(data) {
-        // change this
-        const {
-          submit,
-          inputborder
-        } = this.$refs;
-        const timeline = new TimelineLite();
+      pushNewUserAnswear(data) {
         this.chatInfo.push({
-          text: this.chatAnswears
+          text: data
         })
+      },
+      chat(data) {
+        this.pushNewUserAnswear(data);
+        this.userSpeaks();
 
         switch (this.counter) {
-          case 0:
-            this.userSpeaks();
-
-
-
-            this.chatQuestions.shift(this.chatQuestions[0]);
-            setTimeout(() => {
-              this.chatInfo.push({
-                text: `${this.chatAnswears}... ${this.chatQuestions[0].text} ${this.chatAnswears}?`
-              });
-              this.src = '/img/mowi.394f1d09.gif';
-              responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}${this.chatAnswears}?`,
-                "UK English Male");
-              setTimeout(() => {
-                this.src = '/img/milczy.d51d6997.gif';
-              }, 4000)
-              this.chatAnswears = '';
-              this.counter++;
-            }, 2000)
-
-
-
-            break;
-
           case 1:
-            this.userSpeaks();
-
-
-
-            this.chatQuestions.shift(this.chatQuestions[0]);
-            setTimeout(() => {
-              this.chatInfo.push({
-                text: `${this.chatAnswears}${this.chatQuestions[0].text}`
-              });
-              this.src = '/img/mowi.394f1d09.gif';
-              responsiveVoice.speak(`${this.chatAnswears}... ${this.chatQuestions[0].text}`, "UK English Male");
-              setTimeout(() => {
-                this.src = '/img/milczy.d51d6997.gif';
-              }, 4500)
-              this.chatAnswears = '';
-              this.counter++;
-            }, 2000)
-
-
-
-
-            break;
-          case 4:
-            this.userSpeaks();
-            this.chatQuestions.shift(this.chatQuestions[0]);
-            setTimeout(() => {
-              this.chatInfo.push({
-                text: "Thank you!"
-              });
-            }, 2000)
-
-
-
-            this.counter++
+            let botSpeech = `${data} ${this.chatQuestions[1].text} ${data}`;
+            this.nextQuesition(botSpeech, this.botSpeaks(botSpeech));
             this.chatAnswears = '';
+            this.counter++;
+            break;
+          case 2:
+            let botSpeech2 = `${data} ${this.chatQuestions[1].text}`;
+            this.nextQuesition(botSpeech2, this.botSpeaks(botSpeech2));
+            this.chatAnswears = '';
+            this.counter++;
+            console.log(this.counter);
             break;
           case 5:
             this.$refs.input.disabled = true;
+            this.$refs.input.placeholder = ":-)";
             this.$refs.submit.disabled = true;
             this.chatAnswears = '';
             this.$refs.input.placeholder = "See you soon! 😉 👋👋";
             break;
           default:
-            this.userSpeaks();
+            let botSpeech3 = `${this.chatQuestions[1].text}`;
+            this.nextQuesition(botSpeech3, this.botSpeaks(botSpeech3));
             this.chatAnswears = '';
-            this.nextQuesition();
-            this.botSpeaks();
-            this.counter++
+            this.counter++;
+            console.log(this.counter);
             break;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       }
     }
   }
