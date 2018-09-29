@@ -58,11 +58,11 @@
     },
     methods: {
       botSpeaks(data, deleay, delay2 = 1500) {
-        this.src = '/img/milczy.d51d6997.gif';
-        setTimeout(() => this.src = '/img/mowi.394f1d09.gif', delay2)
+        this.src = './static/milczy.gif';
+        setTimeout(() => this.src = './static/mowi.gif', delay2)
         responsiveVoice.speak(data, "UK English Male");
         setTimeout(() => {
-          this.src = '/img/milczy.d51d6997.gif';
+          this.src = './static/milczy.gif';
         }, deleay)
       },
       userSpeaks() {
