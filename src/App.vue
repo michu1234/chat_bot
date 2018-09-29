@@ -50,25 +50,25 @@
     },
     mounted() {
       let botSpeech = this.chatQuestions[0].text;
-      this.botSpeaks(botSpeech);
+      this.botSpeaks(botSpeech, 3000);
       this.counter++;
     },
     created() {
       this.questionsNumber = this.chatQuestions.length;
     },
     methods: {
-      botSpeaks(data) {
+      botSpeaks(data, deleay, delay2 = 1500) {
         this.src = '/img/milczy.d51d6997.gif';
-        setTimeout(() => this.src = '/img/mowi.394f1d09.gif', 500)
+        setTimeout(() => this.src = '/img/mowi.394f1d09.gif', delay2)
         responsiveVoice.speak(data, "UK English Male");
         setTimeout(() => {
           this.src = '/img/milczy.d51d6997.gif';
-        }, 3000)
+        }, deleay)
       },
       userSpeaks() {
         responsiveVoice.speak(this.chatAnswears);
       },
-      nextQuesition(data, callback, callback2, callback3) {
+      nextQuesition(data, callback) {
         this.chatQuestions.shift(this.chatQuestions[0]);
         setTimeout(() => {
           this.chatInfo.push({
@@ -89,17 +89,21 @@
         switch (this.counter) {
           case 1:
             let botSpeech = `${data} ${this.chatQuestions[1].text} ${data}`;
-            this.nextQuesition(botSpeech, this.botSpeaks(botSpeech));
+            this.nextQuesition(botSpeech, this.botSpeaks(botSpeech, 5000));
             this.chatAnswears = '';
             this.counter++;
             break;
           case 2:
             let botSpeech2 = `${data} ${this.chatQuestions[1].text}`;
-            this.nextQuesition(botSpeech2, this.botSpeaks(botSpeech2));
+            this.nextQuesition(botSpeech2, this.botSpeaks(botSpeech2, 6000));
             this.chatAnswears = '';
             this.counter++;
-            console.log(this.counter);
             break;
+          case 4:
+            let botSpeech4 = `${this.chatQuestions[1].text}`;
+            this.nextQuesition(botSpeech4, this.botSpeaks(botSpeech4, 6000, 4000));
+            this.chatAnswears = '';
+            this.counter++;
           case 5:
             this.$refs.input.disabled = true;
             this.$refs.input.placeholder = ":-)";
@@ -109,27 +113,11 @@
             break;
           default:
             let botSpeech3 = `${this.chatQuestions[1].text}`;
-            this.nextQuesition(botSpeech3, this.botSpeaks(botSpeech3));
+            this.nextQuesition(botSpeech3, this.botSpeaks(botSpeech3, 6000));
             this.chatAnswears = '';
             this.counter++;
-            console.log(this.counter);
             break;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
     }
   }
@@ -172,8 +160,6 @@
     }
   }
 
-  ;
-
   @keyframes animateEven {
     from {
       opacity: 0;
@@ -184,21 +170,6 @@
       opacity: 1;
       transform: translate(100px, 0);
     }
-  }
-
-  .app_fadingBox {
-    width: 100%;
-    height: 150px;
-    background: white;
-    box-shadow: 0 0 90px white,
-      0 0 90px white,
-      0 0 90px white,
-      0 0 90px white;
-    opacity: .6;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
   }
 
   .app__bot {
