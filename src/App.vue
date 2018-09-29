@@ -101,7 +101,7 @@
             break;
           case 4:
             let botSpeech4 = `${this.chatQuestions[1].text}`;
-            this.nextQuesition(botSpeech4, this.botSpeaks(botSpeech4, 6000, 4000));
+            this.nextQuesition(botSpeech4, this.botSpeaks(botSpeech4, 5000, 3000));
             this.chatAnswears = '';
             this.counter++;
           case 5:
@@ -113,7 +113,7 @@
             break;
           default:
             let botSpeech3 = `${this.chatQuestions[1].text}`;
-            this.nextQuesition(botSpeech3, this.botSpeaks(botSpeech3, 6000));
+            this.nextQuesition(botSpeech3, this.botSpeaks(botSpeech3, 4000));
             this.chatAnswears = '';
             this.counter++;
             break;
